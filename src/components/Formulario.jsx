@@ -1,11 +1,34 @@
 import React from 'react'
+import {firebase} from '../firebase'
+import {nanoid} from 'nanoid'
 
 const Formulario = () =>{
     const[fruta, setFruta] = React.useState('')
     const [descripcion, setDescripcion ] = React.useState('')
     const [lista, setLista] = React.useState([])
+    //const [id, setId] = React.useState('')
 
-    const guardarDatos = (e) =>{
+    React.useEffect(()=>{
+        const obtenerDatos = async () =>{
+            try{
+                const db = firebase.firestore()
+                const data = await db.collection('frutas').get()
+                const array = data.docs.map(item =>(
+                    {
+                        id:item.id, ...item.data()
+                    }
+                ))
+                setLista(array)
+
+            }catch(error){
+                console.log(error)
+            }
+        }
+        obtenerDatos()
+
+    })
+
+    const guardarDatos = async (e) =>{
         e.preventDefault()
 
         if(!fruta.trim()){
@@ -15,12 +38,35 @@ const Formulario = () =>{
         if(!descripcion.trim()){
             return alert('Campo descripción vacío')
         }
+        try{
+            const db = firebase.firestore()
+            const nuevaFruta = {
+                nombreFruta:fruta,
+                nombreDescripcion:descripcion
+            }
+            await db.collection('frutas').add(nuevaFruta)
+            setLista([...lista,
+                {id:nanoid(), nombreFruta: fruta, nombreDescripcion: descripcion}
+            ])
+        }catch(error){
+            console.log(error)
+        }
 
-        setLista([...lista,
-            {nombreFruta: fruta, nombreDescripcion: descripcion}
-        ])
+        
     }
 
+    const eliminar= async (id) =>{
+        try{
+            const db = firebase.firestore()
+            await db.collection('frutas').doc(id).delete()
+            const aux = lista.filter(item => item.id !== id)
+            setLista(aux)
+        }catch(error){
+            console.log(error)
+        }
+    }
+
+  
     return (
         <div className='container mt-5'>
             <h1 className='text-center'>CRUD BÁSICO REACT</h1>
@@ -30,10 +76,10 @@ const Formulario = () =>{
                     <h4 className="text-center">Listado de frutas</h4>
                     <ul className="list-group">
                     {
-                        lista.map((item, index)=>(
-                            <li className='list-group-item' key={index}>
+                        lista.map((item)=>(
+                            <li className='list-group-item' key={item.id}>
                                 <span className='lead'>{item.nombreFruta} - {item.nombreDescripcion}</span>
-                                <button className='btn btn-danger btn-sm float-end mx-2'>Eliminar</button>
+                                <button className='btn btn-danger btn-sm float-end mx-2' onClick={()=> eliminar(item.id)}>Eliminar</button>
                                 <button className='btn btn-warning btn-sm float-end'>editar</button>
                             </li>
                         ))
