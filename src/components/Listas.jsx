@@ -8,7 +8,7 @@ const Listas = () =>{
         {id:4, texto: 'Tarea 4'},
         {id:5, texto: 'Tarea 5'}
     ]
-    const [lista, setLista] = React.useState(estadoInicial)
+    const [lista, ] = React.useState(estadoInicial)
 
     return (
         <>
