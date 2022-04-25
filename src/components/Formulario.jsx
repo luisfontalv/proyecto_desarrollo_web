@@ -83,16 +83,7 @@ const Formulario = () =>{
             console.log(error)
         }
 
-        setModoEdicion(false)
-        setCargador('')
-        setNombre('')
-        setEnlace('')
-        setDislikes(0)
-        setLikes(0)
-        setProveedor('')
-        setDescripcion('')
-        setError(null)
-        
+        cancelar()
     }
 
     const eliminar= async (id) =>{
@@ -161,15 +152,7 @@ const Formulario = () =>{
         }catch(error){
             console.log(error)
         }
-        setCargador('')
-        setNombre('')
-        setEnlace('')
-        setDislikes(0)
-        setLikes(0)
-        setProveedor('')
-        setDescripcion('')
-        setModoEdicion(false)
-        setError(null)
+        cancelar()
 
     }
 
