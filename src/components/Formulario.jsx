@@ -193,6 +193,9 @@ const Formulario = () =>{
                 <div className="col-8">
                     <h4 className="text-center">Listado de películas</h4>
                     <ul className="list-group">
+                    <li className='list-group-item'>
+                                <span className='lead'>Nombre - Enlace - Proveedor - Cargador - Likes - Dislikes - Descripción</span>
+                    </li>
                     {
                         lista.map((item)=>(
                             <li className='list-group-item' key={item.id}>
